@@ -64,10 +64,15 @@ export class EditProfile extends Component {
                         <h3>Password</h3>
                         <input ref={(input) => this.password = input} className="form-control" type="password"/>
     
-                        <div className="custom-file mt-4">
+
+                        <div class="form-group mt-4">
+                            <input ref={(input) => this.avatar = input} type="file" class="form-control-file" id="exampleFormControlFile1"/>
+                        </div>
+
+                        {/* <div className="custom-file mt-4">
                             <input ref={(input) => this.avatar = input} id="customFileLang"  className="custom-file-input" type="file"/>
                             <label className="custom-file-label" htmlFor="customFileLang">Please insert file</label>
-                        </div>
+                        </div> */}
     
                     </form>
                     <button onClick={this.updateProfile} className="mt-5 btn-block btn btn-outline-primary">Save</button>
