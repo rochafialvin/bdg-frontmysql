@@ -11,7 +11,7 @@ export class EditProfile extends Component {
 
 
     componentDidMount() {
-        axios.get(`/users/${this.props._id}`)
+        axios.get(`/users/profile/${this.props.username}`)
             .then(res => {
                 this.setState({ profile: res.data })
             }).catch(err => {
@@ -25,7 +25,6 @@ export class EditProfile extends Component {
 
         let _name = this.name.value
         let _email = this.email.value
-        let _age = this.age.value
         let _password = this.password.value
         let _avatar = this.avatar.files[0]
 
@@ -33,11 +32,10 @@ export class EditProfile extends Component {
         // Kita menggunakan form data, karena akan mengirim sebuah file
         formData.append("name", _name)
         formData.append("email", _email)
-        formData.append("age", _age)
         formData.append("password", _password)
         formData.append("avatar", _avatar)
 
-        axios.patch(`/users/${this.props._id}`, formData)
+        axios.patch(`/users/${this.props.username}`, formData)
             .then(res => {
                 console.log(res)
 
@@ -51,7 +49,7 @@ export class EditProfile extends Component {
 
     render() {
         if(!isNull(this.state.profile)){
-            let {name, email, age} = this.state.profile.user
+            let {name, email} = this.state.profile
             return (
                 <div className='container'>  
                     <form className="form-group">
@@ -62,9 +60,6 @@ export class EditProfile extends Component {
     
                         <h3>Email</h3>
                         <input ref={(input) => this.email = input} className="form-control" type="email" defaultValue={email}/>
-    
-                        <h3>Age</h3>
-                        <input ref={(input) => this.age = input} className="form-control" type="text" defaultValue={age}/>
     
                         <h3>Password</h3>
                         <input ref={(input) => this.password = input} className="form-control" type="password"/>
@@ -86,7 +81,8 @@ export class EditProfile extends Component {
 
 const mapStateToProps = state => {
     return {
-        _id: state.auth._id
+        username: state.auth.username,
+        id: state.auth.id
     }
 }
 
