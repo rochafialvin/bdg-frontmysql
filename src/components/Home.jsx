@@ -14,7 +14,7 @@ export class Home extends Component {
     }
 
     getTasks = () => {
-        axios.get(`/tasks/${this.props._id}`)
+        axios.get(`/owntasks/${this.props.id}`)
             .then(res => {
                 this.setState({ tasks : res.data })
 
@@ -26,14 +26,15 @@ export class Home extends Component {
 
     addTask = () => {
         // Get data
-        let userid = this.props._id
+        let user_id = this.props.id
         let description = this.task.value
 
         // POST new task
         axios.post(
-            `/tasks/${userid}`,
+            `/tasks`,
             {
-                description
+                description,
+                user_id
             }
         ).then(res => {
             this.task.value = ""
@@ -45,8 +46,8 @@ export class Home extends Component {
         })
     }
 
-    doneTask = (_id) => {
-        axios.patch(`/tasks/${_id}`, {completed: true})
+    doneTask = (id) => {
+        axios.patch(`/tasks/${id}`, {completed: true})
             .then(res => {
                 this.getTasks()
             }).catch(err => {
@@ -54,8 +55,8 @@ export class Home extends Component {
             })
     }
 
-    cancelTask = (_id) => {
-        axios.patch(`/tasks/${_id}`, {completed: false})
+    cancelTask = (id) => {
+        axios.patch(`/tasks/${id}`, {completed: false})
             .then(res => {
                 this.getTasks()
             }).catch(err => {
@@ -63,8 +64,8 @@ export class Home extends Component {
             })
     }
 
-    deleteTask = (_id) => {
-            axios.delete(`/tasks/${_id}`)
+    deleteTask = (id) => {
+            axios.delete(`/tasks/${id}`)
                 .then(res => {
                     this.getTasks()
                 }).catch(err => {
@@ -77,17 +78,17 @@ export class Home extends Component {
         return this.state.tasks.map(task => {
             if(task.completed){
                 return (
-                    <li onDoubleClick={() => { this.deleteTask(task._id) }} className="list-group-item d-flex justify-content-between">
+                    <li onDoubleClick={() => { this.deleteTask(task.id) }} className="list-group-item d-flex justify-content-between">
                         <del>{task.description}</del>
-                        <button onClick={() => {this.cancelTask(task._id)}} className="btn btn-outline-danger">Cancel</button>
+                        <button onClick={() => {this.cancelTask(task.id)}} className="btn btn-outline-danger">Cancel</button>
                     </li>
                 )
             }
 
             return (
-                <li onDoubleClick={() => { this.deleteTask(task._id) }} className="list-group-item d-flex justify-content-between">
+                <li onDoubleClick={() => { this.deleteTask(task.id) }} className="list-group-item d-flex justify-content-between">
                     <span>{task.description}</span>
-                    <button onClick={() => {this.doneTask(task._id)}} className="btn btn-outline-primary">Done</button>
+                    <button onClick={() => {this.doneTask(task.id)}} className="btn btn-outline-primary">Done</button>
                 </li>
             )
         })
@@ -119,7 +120,8 @@ export class Home extends Component {
 
 const mapStateToProps = state => {
     return {
-        username: state.auth.username
+        username: state.auth.username,
+        id: state.auth.id
     }
 }
 
